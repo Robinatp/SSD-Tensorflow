@@ -18,6 +18,7 @@ import random
 import matplotlib.pyplot as plt
 import matplotlib.image as mpimg
 import matplotlib.cm as mpcm
+from scipy import misc
 
 
 # =========================================================================== #
@@ -41,6 +42,10 @@ colors_tableau = [(255, 255, 255), (31, 119, 180), (174, 199, 232), (255, 127, 1
                   (227, 119, 194), (247, 182, 210), (127, 127, 127), (199, 199, 199),
                   (188, 189, 34), (219, 219, 141), (23, 190, 207), (158, 218, 229)]
 
+CLASSES = ['none','aeroplane', 'bicycle', 'bird', 'boat', 'bottle', 'bus',
+           'car', 'cat', 'chair', 'cow', 'diningtable', 'dog', 'horse',
+           'motorbike', 'person', 'pottedplant', 'sheep', 'sofa',
+           'train', 'tvmonitor']
 
 # =========================================================================== #
 # OpenCV drawing.
@@ -74,11 +79,14 @@ def bboxes_draw_on_img(img, classes, scores, bboxes, colors, thickness=2):
         p1 = (int(bbox[0] * shape[0]), int(bbox[1] * shape[1]))
         p2 = (int(bbox[2] * shape[0]), int(bbox[3] * shape[1]))
         cv2.rectangle(img, p1[::-1], p2[::-1], color, thickness)
+#         roi_img = img[p1[0]:p2[0],p1[1]:p2[1]]
+#         if(roi_img.shape[0]>0 and roi_img.shape[1]> 0):
+#             cv2.imshow('Crop Image',roi_img)
+#             cv2.waitKey(0)
         # Draw text...
-        s = '%s/%.3f' % (classes[i], scores[i])
+        s = '%s/%.3f' % (CLASSES[classes[i]], scores[i])
         p1 = (p1[0]-5, p1[1])
         cv2.putText(img, s, p1[::-1], cv2.FONT_HERSHEY_DUPLEX, 0.4, color, 1)
-
 
 # =========================================================================== #
 # Matplotlib show...
@@ -101,12 +109,14 @@ def plt_bboxes(img, classes, scores, bboxes, figsize=(10,10), linewidth=1.5):
             xmin = int(bboxes[i, 1] * width)
             ymax = int(bboxes[i, 2] * height)
             xmax = int(bboxes[i, 3] * width)
+#             crop_img = img[xmin:(xmax - xmin),xmax:(ymax - ymin)]
+#             misc.imsave('1.jpg', crop_img)
             rect = plt.Rectangle((xmin, ymin), xmax - xmin,
                                  ymax - ymin, fill=False,
                                  edgecolor=colors[cls_id],
                                  linewidth=linewidth)
             plt.gca().add_patch(rect)
-            class_name = str(cls_id)
+            class_name = CLASSES[cls_id]
             plt.gca().text(xmin, ymin - 2,
                            '{:s} | {:.3f}'.format(class_name, score),
                            bbox=dict(facecolor=colors[cls_id], alpha=0.5),
