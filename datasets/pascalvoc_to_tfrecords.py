@@ -55,8 +55,8 @@ import tensorflow as tf
 
 import xml.etree.ElementTree as ET
 
-from datasets.dataset_utils import int64_feature, float_feature, bytes_feature
-from datasets.pascalvoc_common import VOC_LABELS
+from datasets.dataset_utils import int64_feature, float_feature, bytes_feature, write_label_file
+from datasets.pascalvoc_common import VOC_LABELS ,_CLASS_NAMES
 
 # Original dataset organisation.
 DIRECTORY_ANNOTATIONS = 'Annotations/'
@@ -221,6 +221,6 @@ def run(dataset_dir, output_dir, name='voc_train', shuffling=False):
             fidx += 1
 
     # Finally, write the labels file:
-    # labels_to_class_names = dict(zip(range(len(_CLASS_NAMES)), _CLASS_NAMES))
-    # dataset_utils.write_label_file(labels_to_class_names, dataset_dir)
+    labels_to_class_names = dict(zip(range(len(_CLASS_NAMES)), _CLASS_NAMES))
+    write_label_file(labels_to_class_names, dataset_dir)
     print('\nFinished converting the Pascal VOC dataset!')

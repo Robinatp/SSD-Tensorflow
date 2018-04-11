@@ -44,7 +44,10 @@ VOC_LABELS = {
     'train': (19, 'Vehicle'),
     'tvmonitor': (20, 'Indoor'),
 }
-
+_CLASS_NAMES =['none','aeroplane', 'bicycle', 'bird', 'boat', 'bottle', 'bus',
+           'car', 'cat', 'chair', 'cow', 'diningtable', 'dog', 'horse',
+           'motorbike', 'person', 'pottedplant', 'sheep', 'sofa',
+           'train', 'tvmonitor']
 
 def get_split(split_name, dataset_dir, file_pattern, reader,
               split_to_sizes, items_to_descriptions, num_classes):

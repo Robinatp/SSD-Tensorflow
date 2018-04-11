@@ -112,6 +112,7 @@ def flatten(x):
          else:
                result.append(el)
     return result
+
 def main(_):
     if not FLAGS.dataset_dir:
         raise ValueError('You must supply the dataset directory with --dataset_dir')

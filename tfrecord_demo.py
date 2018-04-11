@@ -173,9 +173,8 @@ def plt_bboxes(img, classes, scores, bboxes, figsize=(10,10), linewidth=1.5):
     plt.show()
 
 def test():
-    reconstructed_images = []
-    img,l = decode_from_tfrecords('tfrecords/tracks_val.record')
-    record_iterator = tf.python_io.tf_record_iterator(path='tfrecords/tracks_val.record')
+#     img,l = decode_from_tfrecords('tfrecords/Egohands_train.record')
+    record_iterator = tf.python_io.tf_record_iterator(path='tfrecords/Egohands_train.record')
     init=tf.global_variables_initializer()
     with tf.Session() as sess:
         sess.run(init)

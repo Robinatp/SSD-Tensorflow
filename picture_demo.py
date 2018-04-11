@@ -60,10 +60,10 @@ def pre_process():
 
 def process_image(img,img_input,image_4d,predictions,localisations,bbox_img,ssd_anchors,select_threshold=0.5, nms_threshold=.45, net_shape=(300, 300)):
     # Run SSD network.
-    rimg, rpredictions, rlocalisations, rbbox_img = isess.run([image_4d, predictions, localisations, bbox_img],
+    process_image, rpredictions, rlocalisations, rbbox_img = isess.run([image_4d, predictions, localisations, bbox_img],
                                                               feed_dict={img_input: img})
     
-    s_rimg = tf.squeeze(rimg)
+    s_rimg = tf.squeeze(process_image)
     s_rimg = isess.run(s_rimg)
     cv2.imshow('Pre-Process Image',s_rimg)
     print(s_rimg.shape)
