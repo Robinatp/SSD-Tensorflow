@@ -1,0 +1,22 @@
+DATASET_DIR=`pwd`/tfrecords/
+CHECKPOINT_PATH=`pwd`/checkpoints/ssd_300_vgg.ckpt
+TRAIN_DIR=`pwd`/train_my_dataset_logs/
+python train_ssd_network.py \
+    --train_dir=${TRAIN_DIR} \
+    --dataset_dir=${DATASET_DIR} \
+    --dataset_name=my_dataset \
+    --dataset_split_name=train \
+    --num_classes=3 \
+    --model_name=ssd_300_vgg \
+    --checkpoint_path=${CHECKPOINT_PATH} \
+    --save_summaries_secs=600 \
+    --save_interval_secs=600 \
+    --checkpoint_model_scope=ssd_300_vgg \
+    --checkpoint_exclude_scopes=ssd_300_vgg/conv6,ssd_300_vgg/conv7,ssd_300_vgg/block8,ssd_300_vgg/block9,ssd_300_vgg/block10,ssd_300_vgg/block11,ssd_300_vgg/block4_box,ssd_300_vgg/block7_box,ssd_300_vgg/block8_box,ssd_300_vgg/block9_box,ssd_300_vgg/block10_box,ssd_300_vgg/block11_box \
+    --trainable_scopes=ssd_300_vgg/conv6,ssd_300_vgg/conv7,ssd_300_vgg/block8,ssd_300_vgg/block9,ssd_300_vgg/block10,ssd_300_vgg/block11,ssd_300_vgg/block4_box,ssd_300_vgg/block7_box,ssd_300_vgg/block8_box,ssd_300_vgg/block9_box,ssd_300_vgg/block10_box,ssd_300_vgg/block11_box \
+    --weight_decay=0.0005 \
+    --optimizer=adam \
+    --learning_rate=0.001 \
+    --log_every_n_steps=1 \
+    --max_number_of_steps=100000 \
+    --batch_size=8

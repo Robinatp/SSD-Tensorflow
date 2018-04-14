@@ -63,8 +63,7 @@ def process_image(img,img_input,image_4d,predictions,localisations,bbox_img,ssd_
     process_image, rpredictions, rlocalisations, rbbox_img = isess.run([image_4d, predictions, localisations, bbox_img],
                                                               feed_dict={img_input: img})
     
-    s_rimg = tf.squeeze(process_image)
-    s_rimg = isess.run(s_rimg)
+    s_rimg = np.squeeze(process_image)
     cv2.imshow('Pre-Process Image',s_rimg)
     print(s_rimg.shape)
     

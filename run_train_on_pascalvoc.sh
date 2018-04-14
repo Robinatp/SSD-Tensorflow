@@ -6,6 +6,7 @@ python train_ssd_network.py \
     --dataset_dir=${DATASET_DIR} \
     --dataset_name=pascalvoc_2007 \
     --dataset_split_name=train \
+    --num_classes=21 \
     --model_name=ssd_300_vgg \
     --checkpoint_path=${CHECKPOINT_PATH} \
     --save_summaries_secs=600 \
