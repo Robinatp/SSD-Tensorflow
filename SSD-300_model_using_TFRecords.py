@@ -64,13 +64,13 @@ def bboxes_draw_on_img(img, classes, scores, bboxes, colors, thickness=2):
     shape = img.shape
     for i in range(bboxes.shape[0]):
         bbox = bboxes[i]
-        color = colors[classes[i]]
+        color = colors[int(classes[i])]
         # Draw bounding box...
         p1 = (int(bbox[0] * shape[0]), int(bbox[1] * shape[1]))
         p2 = (int(bbox[2] * shape[0]), int(bbox[3] * shape[1]))
         cv2.rectangle(img, p1[::-1], p2[::-1], color, thickness)
         # Draw text...
-        s = '%s/%.3f' % (classes[i], scores[i])
+        s = '%s/%.3f' % (int(classes[i]), scores[i])
         p1 = (p1[0]-5, p1[1])
         cv2.putText(img, s, p1[::-1], cv2.FONT_HERSHEY_DUPLEX, 0.4, color, 1)
         
@@ -82,6 +82,14 @@ colors_tableau = [(255, 255, 255), (31, 119, 180), (174, 199, 232), (255, 127, 1
                  (188, 189, 34), (219, 219, 141), (23, 190, 207), (158, 218, 229)]
 
 def bboxes_select(classes, scores, bboxes, threshold=0.1):
+    """Sort bounding boxes by decreasing order and keep only the top_k
+    """
+    mask = scores > threshold
+    classes = classes[mask]
+    scores = scores[mask]
+    bboxes = bboxes[mask]
+    return classes, scores, bboxes
+def _bboxes_select(classes, scores, bboxes, threshold=0.1):
     """Sort bounding boxes by decreasing order and keep only the top_k
     """
     mask = scores > threshold
@@ -147,16 +155,15 @@ def test():
 #                                         num_classes=params.num_classes, no_annotation_label=params.no_annotation_label)
 
 
-    nms_threshold = 0.5
     # Output decoding.Detected objects from SSD output.
     localisations = ssd.bboxes_decode(localisations, layers_anchors)
-    tscores, tbboxes = \
+    tclasses, tscores, tbboxes = \
                 ssd.detected_bboxes(predictions, localisations,
                                         select_threshold=0.1,
                                         nms_threshold=0.5,
                                         clipping_bbox=bbox_img,
                                         top_k=400,
-                                        keep_top_k=200)
+                                        keep_top_k=100)
                 
                 
                 
@@ -189,11 +196,11 @@ def test():
         
         for l in range(provider._num_samples):
             # Run model.
-            [rimg, rpredictions, rlocalisations,  rscores, rbboxes, \
+            [rimg, rpredictions, rlocalisations,  rclasses, rscores, rbboxes, \
              glabels, gbboxes, rbbox_img, \
              rfclasses, rfscores, rfbboxes,\
              rt_labels, rt_localizations, rt_scores] = \
-                session.run([image_4d, predictions, localisations,  tscores, tbboxes,
+                session.run([image_4d, predictions, localisations, tclasses, tscores, tbboxes,
                            labels, bboxes_pre, bbox_img, 
                            rclasses_sort, rscores_sort, rbboxes_sort,
                            target_labels, target_localizations, target_scores])
@@ -201,6 +208,8 @@ def test():
 
             rfclasses,rfscores, rfbboxes = bboxes_select(rfclasses,rfscores, rfbboxes,0.5)#(rscores, rbboxes, 0.1)
             print(rfclasses,rfscores, rfbboxes)
+            rclasses, rscores, rbboxes = _bboxes_select(rclasses, rscores, rbboxes,0.5)#(rscores, rbboxes, 0.1)
+            print(rclasses, rscores, rbboxes)
         
         
 #         fig = plt.figure(figsize = (10,10))
@@ -209,8 +218,8 @@ def test():
         
             # Draw bboxes
             img_bboxes = np.copy(ssd_vgg_preprocessing.np_image_unwhitened(rimg[0]))
-            bboxes_draw_on_img(img_bboxes, rfclasses, rfscores, rfbboxes, colors_tableau, thickness=1)
-#             bboxes_draw_on_img(img_bboxes, rclasses, rscores, rbboxes, colors_tableau, thickness=1)
+#             bboxes_draw_on_img(img_bboxes, rfclasses, rfscores, rfbboxes, colors_tableau, thickness=1)
+            bboxes_draw_on_img(img_bboxes, rclasses, rscores, rbboxes, colors_tableau, thickness=1)
 #             bboxes_draw_on_img(img_bboxes, glabels, np.zeros_like(glabels), gbboxes, colors_tableau, thickness=1)
             # bboxes_draw_on_img(img_bboxes, test_labels, test_scores, test_bboxes, colors_tableau, thickness=1)
          

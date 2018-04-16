@@ -227,13 +227,13 @@ class SSDNet(object):
         rscores, rbboxes = \
             tfe.bboxes_sort(rscores, rbboxes, top_k=top_k)
         # Apply NMS algorithm.
-        rscores, rbboxes = \
+        rclasses, rscores, rbboxes = \
             tfe.bboxes_nms_batch(rscores, rbboxes,
                                  nms_threshold=nms_threshold,
                                  keep_top_k=keep_top_k)
         if clipping_bbox is not None:
             rbboxes = tfe.bboxes_clip(clipping_bbox, rbboxes)
-        return rscores, rbboxes
+        return rclasses, rscores, rbboxes
 
     def losses(self, logits, localisations,
                gclasses, glocalisations, gscores,

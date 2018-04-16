@@ -207,15 +207,30 @@ def bboxes_nms_batch(scores, bboxes, nms_threshold=0.5, keep_top_k=200,
     # Dictionaries as inputs.
     if isinstance(scores, dict) or isinstance(bboxes, dict):
         with tf.name_scope(scope, 'bboxes_nms_batch_dict'):
+            d_classes = {}
             d_scores = {}
             d_bboxes = {}
             for c in scores.keys():
                 s, b = bboxes_nms_batch(scores[c], bboxes[c],
                                         nms_threshold=nms_threshold,
                                         keep_top_k=keep_top_k)
+                fmask = tf.cast(tf.greater(s, 0), s.dtype)
+                cl = tf.ones_like(s, s.dtype)*c*fmask
+                d_classes[c] = cl
                 d_scores[c] = s
                 d_bboxes[c] = b
-            return d_scores, d_bboxes
+            # Concat results.
+            l_classes = []
+            l_scores = []
+            l_bboxes = []
+            for c in d_scores.keys():
+                l_classes.append(d_classes[c])
+                l_scores.append(d_scores[c])
+                l_bboxes.append(d_bboxes[c])
+            c_classes = tf.concat(l_classes, axis=1)
+            c_scores = tf.concat(l_scores, axis=1)
+            c_bboxes = tf.concat(l_bboxes, axis=1)
+            return c_classes, c_scores, c_bboxes#d_classes, d_scores, d_bboxes
 
     # Tensors inputs.
     with tf.name_scope(scope, 'bboxes_nms_batch'):
