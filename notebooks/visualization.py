@@ -47,6 +47,8 @@ CLASSES = ['none','aeroplane', 'bicycle', 'bird', 'boat', 'bottle', 'bus',
            'motorbike', 'person', 'pottedplant', 'sheep', 'sofa',
            'train', 'tvmonitor']
 
+# CLASSES = ['none','hat', 'attention']
+
 # =========================================================================== #
 # OpenCV drawing.
 # =========================================================================== #

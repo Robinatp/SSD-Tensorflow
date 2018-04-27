@@ -31,6 +31,7 @@ datasets_map = {
     'pascalvoc_2007': pascalvoc_2007,
     'pascalvoc_2012': pascalvoc_2012,
     'my_dataset': my_dataset,
+
 }
 
 

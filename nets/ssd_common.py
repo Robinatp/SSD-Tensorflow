@@ -282,6 +282,7 @@ def tf_ssd_bboxes_select_layer(predictions_layer, localizations_layer,
 
         d_scores = {}
         d_bboxes = {}
+        
         for c in range(0, num_classes):
             if c != ignore_class:
                 # Remove boxes under the threshold.
