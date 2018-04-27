@@ -214,11 +214,13 @@ def bboxes_nms_batch(scores, bboxes, nms_threshold=0.5, keep_top_k=200,
                 s, b = bboxes_nms_batch(scores[c], bboxes[c],
                                         nms_threshold=nms_threshold,
                                         keep_top_k=keep_top_k)
-                fmask = tf.cast(tf.greater(s, 0), s.dtype)
+                fmask = tf.cast(tf.greater(s, 0), tf.float32)
                 cl = tf.ones_like(s, s.dtype)*c*fmask
+                #cl = tf.fill([s.shape[0],s.shape[1]],c)*fmask
                 d_classes[c] = cl
                 d_scores[c] = s
                 d_bboxes[c] = b
+                
             # Concat results.
             l_classes = []
             l_scores = []
@@ -227,9 +229,10 @@ def bboxes_nms_batch(scores, bboxes, nms_threshold=0.5, keep_top_k=200,
                 l_classes.append(d_classes[c])
                 l_scores.append(d_scores[c])
                 l_bboxes.append(d_bboxes[c])
-            c_classes = tf.concat(l_classes, axis=1)
-            c_scores = tf.concat(l_scores, axis=1)
-            c_bboxes = tf.concat(l_bboxes, axis=1)
+            c_classes = tf.concat(l_classes, axis=1,name="detection_classes")
+            c_scores = tf.concat(l_scores, axis=1,name="detection_scores")
+            c_bboxes = tf.concat(l_bboxes, axis=1,name="detection_boxes")
+                
             return c_classes, c_scores, c_bboxes#d_classes, d_scores, d_bboxes
 
     # Tensors inputs.

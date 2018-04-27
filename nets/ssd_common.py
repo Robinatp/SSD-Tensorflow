@@ -368,7 +368,7 @@ def tf_ssd_bboxes_select_layer_all_classes(predictions_layer, localizations_laye
         scores = tf.reduce_max(sub_predictions, axis=2)
         # Only keep predictions higher than threshold.
         mask = tf.greater(scores, select_threshold)
-        classes = classes * tf.cast(mask, classes.dtype)
+        classes = tf.cast(classes * tf.cast(mask, classes.dtype),scores.dtype)
         scores = scores * tf.cast(mask, scores.dtype)
     # Assume localization layer already decoded.
     bboxes = localizations_layer
