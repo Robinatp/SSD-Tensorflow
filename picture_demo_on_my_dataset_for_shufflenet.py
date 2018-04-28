@@ -49,7 +49,7 @@ def pre_process():
     
     # Restore SSD model.
 
-    ckpt_filename ="train_my_dataset_shufflenet_logs/model.ckpt-0"
+    ckpt_filename ="train_my_dataset_shufflenet_logs/model.ckpt-23648"
     
     isess.run(tf.global_variables_initializer())
     saver = tf.train.Saver()
@@ -69,7 +69,6 @@ def process_image(img,img_input,image_4d,predictions,localisations,bbox_img,ssd_
     s_rimg = tf.squeeze(process_image)
     s_rimg = isess.run(s_rimg)
     cv2.imshow('Pre-Process Image',s_rimg)
-    print(s_rimg.shape)
     
 
     # Get classes and bboxes from the net outputs.
@@ -97,7 +96,7 @@ def main():
         print(path + f)
         img = cv2.imread(path + f)
         rclasses, rscores, rbboxes =  process_image(img,img_input,image_4d,predictions,localisations,bbox_img,ssd_anchors)
-    
+        print(rclasses, rscores, rbboxes)
         visualization.bboxes_draw_on_img(img, rclasses, rscores, rbboxes, visualization.colors_plasma)
         cv2.imshow('Object Detection Image',img)
         cv2.waitKey(0)
